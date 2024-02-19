@@ -1,13 +1,15 @@
-# Vad?
+## Hangman Game
+This is a web development project for the classic game "Hangman" done with JavaScript, HTML and CSS. 
 
-Detta är en uppgift som går ut på att individuellt implementera ett populärt rudimentärt spel i JavaScript - "hänga gubbe". Jag fick en grundstruktur att utgå ifrån och utveckla vidare på.
+## How to run the game
+1. Download the project as a .zip folder and unzip
+2. Start the game by opening the index.html file in a web browser.
 
-Hänga gubbe, är ett spel där det ord slumpas fram. Spelaren gissar sedan vilka bokstäver som ordet innehåller, för varje fel svar ritas en del av "hänga gubbe"-bilden upp. Om spelaren gissar fel tillräckligt många gånger och gubben har blivit "hängd" så har spelaren förlorat. Lyckas däremot spelaren gissa alla bokstäver så vinner spelaren.
+## How to play
+Hangman is a game where you guess letters for a random hidden word. You have a limited amount of guesses, and you need to guess all the correct letters before you run out of guesses to win the game, otherwise the man will get hanged.
 
-## Varför?
+## Screenshots
 
-Detta projekt byggdes som en uppgift för att lära mig Javacript.
+![image](https://github.com/Hanna-Holm/Hangman/assets/18073317/a776898a-054c-4879-b89d-89717b8e147a)
 
-## Hur?
-
-För att ta del av detta projekt, ladda ner mappen som zip-fil och dubbelklicka på index.html för att spela spelet i valfri webbläsare!
+![image](https://github.com/Hanna-Holm/Hangman/assets/18073317/06b80b13-e129-4b52-b0fb-d1c7a98b488f)
