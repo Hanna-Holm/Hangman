@@ -1,0 +1,248 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css?family=Amatic+SC|Indie+Flower|Shadows+Into+Light&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: #F2F2F2;
+  background-color: #0F472C;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 100vh;
+  background: radial-gradient(circle, 
+                            rgba(6,105,24,1) 0%, 
+                            rgba(4,62,24,1) 100%);
+}
+
+header {
+  display: block;
+}
+
+header h1 {
+  font-family: 'Amatic SC', cursive;
+  font-size: 4.5em;
+  margin-top: 20px;
+  text-align: center;
+}
+
+main {
+  padding: 1em;
+}
+
+main:after {
+  content: "\00a0"; /* &nbsp; */
+  display: block;
+  margin-top: var(--space);
+  height: 0px;
+  visibility: hidden;
+}
+
+main > article {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  text-align: center;
+  align-items: center;
+}
+
+main > article > button {
+  align-content: center;
+  justify-content: center;
+}
+
+main > article > h2 {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 0.7em;
+}
+
+ul {
+  list-style-type: none;
+  margin: 1.5em;
+}
+
+footer {
+  background-color: #3D2330;
+  padding: 30px;
+  color: #F2F2F2;
+  font-size: 1.25em;
+  width: 100vw;
+  flex: none;
+  text-align: center;
+}
+
+#startGameBtn {
+  font-size: 1.5em;
+  margin: 25px auto;
+  margin-bottom: 0;
+}
+
+#gameBoard {
+  padding: 10px 0;
+}
+
+#letterButtons {
+  display: inline-flex;
+  list-style-type: none;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#letterButtons button:not(last-child) {
+  margin: 4px 4px;
+  cursor: pointer;
+  max-width: 84px;
+  min-width: 84px;
+}
+
+#matchedLettersContainer {
+  text-align: center;
+}
+
+#matchedLettersContainer li {
+  display: inline-flex;
+  margin: 7px;
+  justify-content: center;
+}
+
+#matchedLettersContainer input {
+  border: 1px solid rgb(207, 207, 207);
+  color: rgb(34, 34, 34);
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 2em;
+  margin-top: 1em;
+  padding: 10px;
+  text-align: center;
+  width: 2.5em;
+}
+
+#imgAndMessageContainer {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#hangman {
+  margin: 20px;
+}
+
+#message {
+  padding-top: 20px;
+  font-size: 4em;
+  text-align: center;
+  align-self: center;
+  color: rgb(253, 107, 180);
+}
+
+#message > p {
+  margin-bottom: 15%;
+}
+
+.btn {
+  -moz-user-select: text;
+  background-color: #f2f2f2;
+  background: transparent;
+  border-radius: 6px;
+  border: 0;
+  border: 2px solid rgb(195, 195, 195);
+  color: rgb(218, 218, 218);
+  cursor: pointer;
+  display: block;
+  font: inherit;
+  line-height: normal;
+  margin-bottom: 16px;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  padding: 16px 36px 22px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.btn::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+.btn--stripe {
+  overflow: hidden;
+  position: relative;
+}
+
+.btn--stripe:after {
+  content: "";
+  display: block;
+  height: 7px;
+  width: 100%;
+  background-image: -webkit-repeating-linear-gradient(
+    45deg,
+    rgb(184, 184, 184),
+    rgb(197, 197, 197) 1px,
+    transparent 2px,
+    transparent 5px
+  );
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgb(189, 189, 189),
+    rgb(192, 192, 192) 1px,
+    transparent 2px,
+    transparent 5px
+  );
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-top: 1px solid rgb(190, 190, 190);
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-size: 7px 7px;
+}
+
+.btn--stripe:disabled {
+  background-color: #122425;
+  color: rgb(216, 216, 216);
+  border-color: #666;
+}
+
+.btn--stripe:hover {
+  background-color: #3D2330;
+  color: #fff;
+  border-color: #000;
+}
+
+.btn--stripe:disabled:after, 
+.btn--stripe:hover:after {
+  background-image: -webkit-repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 1px,
+    transparent 2px,
+    transparent 5px
+  );
+  background-image: repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 1px,
+    transparent 2px,
+    transparent 5px
+  );
+  border-top: 1px solid #000;
+}
+
+.restartBtn {
+  padding: 20px 35px;
+  font-size: 0.7em;
+  display: block;
+  text-align: center;
+  margin: 20px auto;
+  margin-bottom: 30%;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: rgb(242, 242, 242);
+}
