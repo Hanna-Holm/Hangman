@@ -1,136 +1,143 @@
-// Globala variabler
 
-// Array: med spelets alla ord
-const wordList = ['KATT',
-                  'HUND',
-                  'FÅGEL',
-                  'FISK',
-                  'KO',
-                  'HÄST',
-                  'ILLER',
-                  'HAMSTER',
-                  'GRIS',
-                  'ORM',
-                  'ÖDLA',
-                  'ZEBRA',
-                  'RÅDJUR'];
+const WORDS_LIST = ['KATT',
+  'HUND',
+  'FÅGEL',
+  'FISK',
+  'KO',
+  'HÄST',
+  'ILLER',
+  'HAMSTER',
+  'GRIS',
+  'ORM',
+  'ÖDLA',
+  'ZEBRA',
+  'RÅDJUR'
+];
 
-const lettersInAlphabet = 29;
+const HANGMAN_IMG = document.getElementById('hangman');
+const AVAILABLE_NUMBER_OF_GUESSES = 6;
 
-// Array av DOM-noder: Knapparna för bokstäverna
-const letterButtonsNodeList = document.querySelectorAll('ul#letterButtons > li > button'); 
+// Lists for the available letter buttons and the empty boxes where the matched (correctly guessed) letters will appear.
+const LETTER_BUTTONS = document.querySelectorAll('ul#letterButtons > li > button');
+const MATCHED_LETTER_BOXES = document.getElementById('matchedLettersContainer');
 
-// Array av DOM-noder: Rutorna där bokstäverna ska stå
-const matchedLettersEls = document.getElementById('matchedLettersContainer');    
+const START_GAME_BUTTON = document.getElementById('startGameBtn');
+START_GAME_BUTTON.addEventListener('click', () => {
+  startGame();
+});
 
-// Knapp som startar spelet
-const startGameBtnEl = document.getElementById('startGameBtn'); 
-startGameBtnEl.addEventListener('click', startGame);
-
-// Bild som ska uppdateras vid felaktiga gissningar
-const hangmanImg = document.getElementById('hangman');
-
-// Funktion som startar spelet vid knapptryckning
 function startGame() {
   let gameOver = false;
   let failedGuesses = 0;
   let correctGuesses = 0;
-  matchedLettersEls.innerHTML = '';
-  message.innerHTML = '';
-  hangmanImg.setAttribute('src', 'images/h0.png')
-  
-  // Startknappen försvinner när man startat spelet
-  startGameBtnEl.style.display = "none";
+  let hiddenWord = randomizeWord(WORDS_LIST);
 
-  resetAllLetterButtons(); // Gör alla bokstäver klickbara vid spelets start/omstart
+  restoreGameboard();
+  addMatchingLetterBoxes();
+  handleGuess();
 
-  // Ett ord väljs slumpvis ur wordList och sätts till selectedWord
-  let selectedWord = randomizeWord(wordList); 
-  
-  // Lägg till samma antal rutor som det finns bokstäver i selectedWord
-  for (let i = 0; i < selectedWord.length; i++) {
-    let selectedWordLetterBox = document.createElement('li');
-    let selectedWordLetter = document.createElement('input');
+  function handleGuess() {
+    for (let i = 0; i < LETTER_BUTTONS.length; i++) {
+      let letterBtn = LETTER_BUTTONS[i];
 
-    selectedWordLetterBox.setAttribute('class', 'letterBox');
-    selectedWordLetter.setAttribute('type', 'text');
-    selectedWordLetter.setAttribute('disabled', 'true');
-
-    matchedLettersEls.appendChild(selectedWordLetterBox);
-    selectedWordLetterBox.appendChild(selectedWordLetter);
-  }
-  
-  // Iterera genom nodelist av knapparna för att kunna kalla på funktion när man trycker på en av dem
-  for (let i = 0; i < letterButtonsNodeList.length; i++) {
-    let letterBtn = letterButtonsNodeList[i];
-    if (correctGuesses != selectedWord.length) {
-      letterBtn.onclick = function() {  
-        // funktion när man klickar på en letterBtn
-        if (failedGuesses < 6 && gameOver == false) {
-          findLetterInSelectedWord(letterBtn.value);
+      if (correctGuesses != hiddenWord.length && failedGuesses < 6) {
+        letterBtn.onclick = () => {
+          tryMatchLetter(letterBtn.value);
           letterBtn.setAttribute('disabled', 'true');
         }
       }
     }
   }
 
-  // Funktion som körs när man klickar på en letterBtn
-  function findLetterInSelectedWord(letterBtnValue) {
+  function tryMatchLetter(letterBtnValue) {
     let isLetterFound = false;
-    for (let i = 0; i < selectedWord.length; i++) {
-      // Kollar om bokstaven på knappen matchar bokstav på platsen i rätta ordet
-      if (letterBtnValue == selectedWord[i]) {
+
+    for (let i = 0; i < hiddenWord.length; i++) {
+      if (letterBtnValue == hiddenWord[i]) {
         let letterBoxes = document.querySelectorAll('.letterBox > input');
-        // Lägger till bokstaven som finns i selectedWord på rätt plats i boxarna
-        letterBoxes[i].value = selectedWord[i];
+        letterBoxes[i].value = hiddenWord[i];
         isLetterFound = true;
-        correctGuesses++; // Öka correctGuesses med 1 för varje gång de matchar
-        }
-
-      // Om man gissat alla bokstäver i selectedWord
-      if (correctGuesses == selectedWord.length) {
-        message.innerHTML = 'Grattis! Du gissade rätt och kom undan från hängningen!';
-        gameOver = true;
+        correctGuesses++;
+        checkIfWon(correctGuesses);
       }
     }
- 
-    // Om man gissar fel bokstav och inte har gissat alla rätta bokstäver
-    if (correctGuesses != selectedWord.length && isLetterFound == false) {
+
+    if (correctGuesses != hiddenWord.length && isLetterFound == false) {
       failedGuesses++;
-      if (failedGuesses <= 6) {
+
+      if (failedGuesses <= AVAILABLE_NUMBER_OF_GUESSES) {
         updateHangmanImg();
-        
-      } 
-
-      if (failedGuesses == 6) {
-        matchedLettersEls.innerHTML = `<h2>Det rätta ordet var: ${selectedWord}</h2>`;
-        let message = document.getElementById('message');
-        message.innerHTML = '<p>Du förlorade</p>';
-        gameOver = true;
       }
-    }
 
-    if (gameOver == true) {
-      let restartBtnEl = document.createElement('button');
-      restartBtnEl.className = 'restartBtn';
-      restartBtnEl.innerHTML = "SPELA IGEN";
-      message.appendChild(restartBtnEl);
-      restartBtnEl.addEventListener('click', startGame);
+      checkIfLost(failedGuesses);
+    }
+  }
+
+  function restoreGameboard() {
+    START_GAME_BUTTON.style.display = "none";
+    MATCHED_LETTER_BOXES.innerHTML = '';
+    message.innerHTML = '';
+    HANGMAN_IMG.setAttribute('src', 'images/h0.png');
+    restoreLetterButtons();
+  }
+
+  function restoreLetterButtons() {
+    for (let i = 0; i < LETTER_BUTTONS.length; i++) {
+      let letterBtn = LETTER_BUTTONS[i];
+      letterBtn.disabled = false;
+    }
+  }
+
+  function addMatchingLetterBoxes() {
+    for (let i = 0; i < hiddenWord.length; i++) {
+      let matchingLetterBox = document.createElement('li');
+      let matchingLetter = document.createElement('input');
+
+      matchingLetterBox.setAttribute('class', 'letterBox');
+      matchingLetter.setAttribute('type', 'text');
+      matchingLetter.setAttribute('disabled', 'true');
+
+      MATCHED_LETTER_BOXES.appendChild(matchingLetterBox);
+      matchingLetterBox.appendChild(matchingLetter);
     }
   }
 
   function updateHangmanImg() {
-    hangmanImg.setAttribute('src', `images/h${failedGuesses}.png`);
+    HANGMAN_IMG.setAttribute('src', `images/h${failedGuesses}.png`);
   }
-}
 
-function randomizeWord(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
+  function randomizeWord(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
 
-function resetAllLetterButtons() {
-  for (let i = 0; i < letterButtonsNodeList.length; i++) {
-    let letterBtn = letterButtonsNodeList[i];
-    letterBtn.disabled = false;
+  function checkIfWon(correctGuesses) {
+    if (correctGuesses == hiddenWord.length) {
+      message.innerHTML = 'Grattis! Du gissade rätt och kom undan från hängningen!';
+      gameOver = true;
+      generateRestartButton();
+    }
+  }
+
+  function checkIfLost(failedGuesses) {
+    if (failedGuesses == AVAILABLE_NUMBER_OF_GUESSES) {
+      showLosingMessage();
+      gameOver = true;
+      generateRestartButton();
+    }
+  }
+
+  function showLosingMessage() {
+    MATCHED_LETTER_BOXES.innerHTML = `<h2>Det rätta ordet var: ${hiddenWord}</h2>`;
+    let message = document.getElementById('message');
+    message.innerHTML = '<p>Du förlorade</p>';
+
+  }
+
+  function generateRestartButton() {
+    let restartBtnEl = document.createElement('button');
+    restartBtnEl.className = 'restartBtn';
+    restartBtnEl.innerHTML = "SPELA IGEN";
+    message.appendChild(restartBtnEl);
+    restartBtnEl.addEventListener('click', startGame);
   }
 }

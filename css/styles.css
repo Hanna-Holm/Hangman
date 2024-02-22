@@ -43,7 +43,7 @@ main:after {
   visibility: hidden;
 }
 
-main > article {
+main > section {
   display: flex;
   flex-direction: column;
   margin: 20px;
@@ -51,12 +51,12 @@ main > article {
   align-items: center;
 }
 
-main > article > button {
+main > section > button {
   align-content: center;
   justify-content: center;
 }
 
-main > article > h2 {
+main > section > h2 {
   text-align: center;
   font-size: 2em;
   margin-bottom: 0.7em;
